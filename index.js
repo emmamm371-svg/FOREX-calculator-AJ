@@ -51,7 +51,7 @@ function calculateTrade(entry, stopLoss, balance, riskPercent, symbol) {
   }
 
   const tpLevels = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 5; i++) {
     let tpPrice;
     if (direction === 'BUY') {
       tpPrice = entry + distance * i;
@@ -369,10 +369,21 @@ async function handleTradeCalculation(ctx, user, entry, stopLoss) {
   await ctx.reply('What would you like to do next?', mainMenu());
 }
 
-// Launch
+// ---------- Launch Bot ----------
 bot.launch().then(() => {
   console.log('Bot is running...');
 });
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+// ---------- পোর্ট খোলা রাখার জন্য (Render-এর জন্য) ----------
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Bot is running!');
+});
+const PORT = process.env.PORT || 10000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
